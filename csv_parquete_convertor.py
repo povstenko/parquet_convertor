@@ -13,9 +13,8 @@ def pd_parquet_to_csv(parquet_path: str, csv_path: str):
     return df
 
 def main():
-    df = pd_csv_to_parquet('data.csv', 'data.parquet')
-    df = pd_parquet_to_csv('data.parquet', 'data.csv')
-    print(df)
+    pd_csv_to_parquet('data.csv', 'data.parquet')
+    pd_parquet_to_csv('data.parquet', 'data_conv.csv')
 
 if __name__ == "__main__":
     main()
