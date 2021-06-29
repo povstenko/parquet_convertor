@@ -1,5 +1,8 @@
 # Data Files Convertor
 
+[![MIT License](https://img.shields.io/badge/GitHub-100000)](https://github.com/povstenko/parquet_convertor)
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+
 This script allows the user to convert different data types. 
 
 This tool accepts comma-separated value files (.csv) as well as apache parquet (.parquet) files. It is assumed that the first row of the spreadsheet is the location of the columns.
