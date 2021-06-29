@@ -77,7 +77,7 @@ def main():
         # get schema of parquet
         print('schema')
     else:
-        print('Please, pass the necessary arguments for convertion (For example: --csv2parquet data.csv).\nType --help for description of arguments.')
+        print('Please, pass the necessary arguments for convertion (example: --csv2parquet data.csv).\nType --help for description of parameters.')
 
 if __name__ == "__main__":
     main()
