@@ -31,43 +31,44 @@ def csv_to_json(csv_path:str, json_path:str, json_indent=4):
 
     with open(json_path, 'w') as jsonFile:
         jsonFile.write(json.dumps(data, indent=json_indent))
+        
+def is_file_ext_correct(parameter:str, filename:str, extension:str)-> bool:
+    if filename.split('.')[1] != extension:
+        print('Wrong argument for --csv2parquet. You must specify *.csv file for input')
+        return False
+    else:
+        return True
 
 def main():
     
     if args['csv2parquet']:
         # convert csv to parquet
-        
-        inputFilename = args['csv2parquet']
-        if inputFilename.split('.')[1] != 'csv':
-            print('Wrong argument for --csv2parquet. You must specify *.csv file for input')
-        else:
+        if is_file_ext_correct('csv2parquet', args['csv2parquet'], 'csv'):
+            inputFilename = args['csv2parquet']
             outputFilename = inputFilename.split('.')[0] + "_converted.parquet"
+            
             csv_to_parquet(inputFilename, outputFilename)
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
-        
     elif args['parquet2csv']:
         # convert parquet to csv
-        
-        inputFilename = args['parquet2csv']
-        if inputFilename.split('.')[1] != 'parquet':
-            print('Wrong argument for --parquet2csv. You must specify *.parquet file for input')
-        else:
+        if is_file_ext_correct('parquet2csv', args['parquet2csv'], 'parquet'):
+            inputFilename = args['parquet2csv']
             outputFilename = inputFilename.split('.')[0] + "_converted.csv"
-            parquet_to_csv(inputFilename, outputFilename)
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
             
+            parquet_to_csv(inputFilename, outputFilename)
     elif args['csv2json']:
         # convert csv to json
-        
-        inputFilename = args['csv2json']
-        if inputFilename.split('.')[1] != 'csv':
-            print('Wrong argument for --csv2json. You must specify *.csv file for input')
-        else:
+        if is_file_ext_correct('csv2json', args['csv2json'], 'csv'):
+            inputFilename = args['csv2json']
             outputFilename = inputFilename.split('.')[0] + "_converted.json"
+            
             csv_to_json(inputFilename, outputFilename)
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
+    elif args['get-schema']:
+        # get schema of parquet
+        print('schema')
     else:
         print('Please, pass the necessary arguments for convertion (For example: --csv2parquet data.csv).\nType --help for description of arguments.')
+    
+    print(f'Successfully converted from {inputFilename} to {outputFilename}')
 
 if __name__ == "__main__":
     main()
