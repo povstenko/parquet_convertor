@@ -54,6 +54,7 @@ def main():
     ap.add_argument("-cj", "--csv2json", type=str, help="Convert csv to json. Set input csv filename string (example: data.csv)")
     ap.add_argument("-s", "--get_schema", type=str, help="Get schema of parquet file. Set input parquet filename string (example: data.parquet)")
     ap.add_argument("-d", "--delimiter", type=str, default=",", help="Set delimiter for csv file (default: ,)")
+    ap.add_argument("-i", "--json_indent", type=int, help="Set indent for json file (default: 4)")
     args = vars(ap.parse_args())
     
     # check convert option
@@ -87,7 +88,8 @@ def main():
             inputFilename = args['csv2json']
             outputFilename = add_filename_suffix(inputFilename, 'converted', 'json')
             
-            csv_to_json(inputFilename, outputFilename)
+            csv_to_json(inputFilename, outputFilename, json_indent=args['json_indent'])
+
             print(f'Successfully converted from {inputFilename} to {outputFilename}')
     elif args['get_schema']:
         # get schema of parquet
