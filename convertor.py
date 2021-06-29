@@ -165,7 +165,7 @@ def main():
     ap.add_argument("-d", "--delimiter", type=str, default=",",
                     help="Set delimiter for csv file (default: ,)")
     ap.add_argument("-i", "--json_indent", type=int,
-                    help="Set indent for json file (default: 4)")
+                    help="Set indent for json file (default: None)")
     args = vars(ap.parse_args())
 
     # check convert option
