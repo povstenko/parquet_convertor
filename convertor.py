@@ -30,19 +30,49 @@ import pyarrow
 
 # define functions for convert
 def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
-    """Сonvert csv to parquet and save to file"""
+    """Сonvert csv to parquet and save to file
+    
+    Parameters
+    ----------
+    csv_path: str
+        The file name of the csv
+    parquet_path: str
+        The file name of the parquet
+    delimiter: str, optional
+        Delimiter to use in parsing engine (default is ',')
+    """
     df = pd.read_csv(csv_path, sep=delimiter)
     df.to_parquet(parquet_path)
 
 
 def parquet_to_csv(parquet_path: str, csv_path: str, delimiter=','):
-    """Сonvert parquet to csv and save to file"""
+    """Сonvert parquet to csv and save to file
+    
+    Parameters
+    ----------
+    parquet_path: str
+        The file name of the parquet
+    csv_path: str
+        The file name of the csv
+    delimiter: str, optional
+        Delimiter to use in parsing engine (default is ',')
+    """
     df = pd.read_parquet(parquet_path)
     df.to_csv(csv_path, sep=delimiter, index=False)
 
 
 def csv_to_json(csv_path: str, json_path: str, json_indent=4):
-    """Сonvert csv to json and save to file"""
+    """Сonvert csv to json and save to file
+    
+    Parameters
+    ----------
+    csv_path: str
+        The file name of the csv
+    json_path: str
+        The file name of the json
+    json_indent: int, optional
+        Indent for json output file (default is 4)
+    """
     data = []
 
     # read csv file
@@ -55,20 +85,61 @@ def csv_to_json(csv_path: str, json_path: str, json_indent=4):
         jsonFile.write(json.dumps(data, indent=json_indent))
 
 
-def parquet_schema(parquet_path: str):
-    """Get schema of parquet file"""
+def parquet_schema(parquet_path: str) -> str:
+    """Get schema of parquet file
+    
+    Parameters
+    ----------
+    parquet_path: str
+        The file name of the parquet
+    
+    Returns
+    -------
+    str
+        a string of parquet schema
+    """
     df = pd.read_parquet(parquet_path)
     return pyarrow.Table.from_pandas(df=df).schema
 
 
 # define functions for working with filenames
 def add_filename_suffix(filename: str, suffix: str, extension: str) -> str:
-    """Add suffix for filename and change extension"""
+    """Add suffix for filename and change extension
+    
+    Parameters
+    ----------
+    filename: str
+        The file name string
+    suffix: str
+        The suffix which should be added at the end of filename
+    extension: str
+        New extension of filename
+    
+    Returns
+    -------
+    str
+        filename string with added suffix and new file extension
+    """
     return filename.split('.')[0] + '_' + suffix + '.' + extension
 
 
 def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
-    """Returns True if filename has correct file extension and prints message otherwise"""
+    """Returns True if filename has correct file extension and prints message otherwise"
+    
+    Parameters
+    ----------
+    parameter: str
+        The name of parameter used to print in error message
+    filename: str
+        The file name string
+    extension: str
+        File extension used to compare with filename
+    
+    Returns
+    -------
+    bool
+        A flag used to determinate is the given filename has correct extension
+    """
     if filename.split('.')[1] != extension:
         print(
             f'Wrong argument for --{parameter}. You must specify *.{extension} file for input')
