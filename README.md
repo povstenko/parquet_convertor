@@ -8,27 +8,34 @@ This script requires that `pandas`, `argparse`, `pyarrow`, `csv` and `json` be i
 
 This file can also be imported as a module and contains the following functions:
 
-* csv_to_parquet - convert csv to parquet and save to file
-* parquet_to_csv - convert parquet to csv and save to file
-* csv_to_json - convert csv to json and save to file
-* parquet_schema - returns schema of parquet file
-* add_filename_suffix - returns filename string with added suffix for filename and change extension
-* is_file_ext_correct - returns returns True if filename has correct file extension and prints message otherwise
-* main - the main function of the script
+* `csv_to_parquet` - convert csv to parquet and save to file
+* `parquet_to_csv` - convert parquet to csv and save to file
+* `csv_to_json` - convert csv to json and save to file
+* `parquet_schema` - returns schema of parquet file
+* `add_filename_suffix` - returns filename string with added suffix for filename and change extension
+* `is_file_ext_correct` - returns returns True if filename has correct file extension and prints message otherwise
+* `main` - the main function of the script
 
 ## Table of Contents
+- [Parameters](#parameters)
+- [Usage](#usage)
+  * [Convert CSV to Parquet](#convert-csv-to-parquet)
+  * [Convert Parquet to CSV](#convert-parquet-to-csv)
+  * [Convert CSV to JSON](#convert-csv-to-json)
+  * [Get Parquet schema](#get-parquet-schema)
+- [License](#license)
+
+## Parameters
+* `-h`, `--help` show help message and exit
+* `-cp`, `--csv2parquet` convert csv to parquet. Set input csv filename string *(example: data.csv)*
+* `-pc`, `--parquet2csv` convert parquet to csv. Set input parquet filename string *(example: data.parquet)*
+* `-cj`, `--csv2json` convert csv to json. Set input csv filename string *(example: data.csv)*
+* `-s`, `--get_schema` get schema of parquet file. Set input parquet filename string *(example: data.parquet)*
+* `-o`, `--output` set output file name without extension *(example: newfile)*
+* `-d`, `--delimiter` set delimiter for csv file *(default: ,)*
+* `-i`, `--json_indent` set indent for json file *(default: None)*
 
 ## Usage
-
-### Arguments
-* `-h/--help` show help message and exit
-* `-cp/--csv2parquet` convert csv to parquet. Set input csv filename string *(example: data.csv)*
-* `-pc/--parquet2csv` convert parquet to csv. Set input parquet filename string *(example: data.parquet)*
-* `-cj/--csv2json` convert csv to json. Set input csv filename string *(example: data.csv)*
-* `-s/--get_schema` get schema of parquet file. Set input parquet filename string *(example: data.parquet)*
-* `-o/--output` set output file name without extension *(example: newfile)*
-* `-d/--delimiter` set delimiter for csv file *(default: ,)*
-* `-i/--json_indent` set indent for json file *(default: None)*
 
 ### Convert CSV to Parquet
 
