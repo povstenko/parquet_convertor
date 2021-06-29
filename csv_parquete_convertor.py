@@ -12,7 +12,7 @@ ap.add_argument("-cj", "--csv2json", required=False, help="Convert csv to json")
 ap.add_argument("-s", "--get-schema", required=False, help="Get schema of parquet file")
 args = vars(ap.parse_args())
 
-print(args)
+# print(args)
 
 def csv_to_parquet(csv_path: str, parquet_path: str):
     df = pd.read_csv(csv_path)
@@ -40,14 +40,18 @@ def main():
     
     if args['csv2parquet']:
         # convert csv to parquet
-        inputFilename = args['csv2parquet']
-        p = Path(inputFilename)
-        outputFilename = p.with_suffix('.parquet')
         
-        csv_to_parquet(inputFilename, outputFilename)
-        print(f'Successfully converted from {inputFilename} to {outputFilename}')
+        inputFilename = args['csv2parquet']
+        if inputFilename.split('.')[1] != 'csv':
+            print('Wrong argument for --csv2parquet. You must specify *.csv file')
+        else:
+            outputFilename = inputFilename.split('.')[0] + "_converted.parquet"
+            csv_to_parquet(inputFilename, outputFilename)
+            print(f'Successfully converted from {inputFilename} to {outputFilename}')
         
     elif args['parquet2csv']:
+        # convert parquet to csv
+        
         print('b')
     
     # pd_csv_to_parquet('data.csv', 'data.parquet')
