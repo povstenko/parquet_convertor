@@ -160,6 +160,8 @@ def main():
                     help="Convert csv to json. Set input csv filename string (example: data.csv)")
     ap.add_argument("-s", "--get_schema", type=str,
                     help="Get schema of parquet file. Set input parquet filename string (example: data.parquet)")
+    ap.add_argument("-o", "--output", type=str,
+                    help="Set output file name without extension (example: newfile)")
     ap.add_argument("-d", "--delimiter", type=str, default=",",
                     help="Set delimiter for csv file (default: ,)")
     ap.add_argument("-i", "--json_indent", type=int,
@@ -171,7 +173,11 @@ def main():
         # convert csv to parquet
         if is_file_ext_correct('csv2parquet', args['csv2parquet'], 'csv'):
             inputFilename = args['csv2parquet']
-            outputFilename = add_filename_suffix(inputFilename, 'converted', 'parquet')
+            
+            if args['output']:
+                outputFilename = args['output'] + '.parquet'
+            else:
+                outputFilename = add_filename_suffix(inputFilename, 'converted', 'parquet')
 
             if args['delimiter']:
                 csv_to_parquet(inputFilename, outputFilename,
@@ -184,7 +190,11 @@ def main():
         # convert parquet to csv
         if is_file_ext_correct('parquet2csv', args['parquet2csv'], 'parquet'):
             inputFilename = args['parquet2csv']
-            outputFilename = add_filename_suffix(inputFilename, 'converted', 'csv')
+            
+            if args['output']:
+                outputFilename = args['output'] + '.csv'
+            else:
+                outputFilename = add_filename_suffix(inputFilename, 'converted', 'csv')
 
             if args['delimiter']:
                 parquet_to_csv(inputFilename, outputFilename,
@@ -197,8 +207,12 @@ def main():
         # convert csv to json
         if is_file_ext_correct('csv2json', args['csv2json'], 'csv'):
             inputFilename = args['csv2json']
-            outputFilename = add_filename_suffix(inputFilename, 'converted', 'json')
-
+            
+            if args['output']:
+                outputFilename = args['output'] + '.json'
+            else:
+                outputFilename = add_filename_suffix(inputFilename, 'converted', 'json')
+            
             csv_to_json(inputFilename, outputFilename,
                         json_indent=args['json_indent'])
 
