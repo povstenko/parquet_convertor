@@ -6,27 +6,26 @@ This tool accepts comma separated value files (.csv) as well as apache parquet
 (.parquet) files. It is assumed that the first row of the spreadsheet is the
 location of the columns.
 
-This script requires that `pandas`, `argparse`, `pyarrow`, `csv` and `json` be installed within the Python
+This script requires that `pandas`, `pyarrow, `argparse` and `time` be installed within the Python
 environment you are running this script in.
 
 This file can also be imported as a module and contains the following
 functions:
 
     * csv_to_parquet - convert csv to parquet and save to file
-    * parquet_to_csv - convert parquet to csv and save to file
-    * csv_to_json - convert csv to json and save to file
-    * parquet_schema - returns schema of parquet file
+    * convert_convert_csv_to_parquet - convert parquet to csv and save to file
+    * get_get_parquet_schema - returns schema of parquet file
     * add_filename_suffix - returns filename string with added suffix for filename and change extension
     * is_file_ext_correct - returns returns True if filename has correct file extension and prints message otherwise
+    * print_success_message - prints message of successfull convertion with elapsed time
     * main - the main function of the script
 """
 
 # import the necessary packages
 import pandas as pd
-import csv
-import json
-import argparse
 import pyarrow
+import argparse
+import time
 
 # define functions for convert
 def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
@@ -45,7 +44,7 @@ def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
     df.to_parquet(parquet_path)
 
 
-def parquet_to_csv(parquet_path: str, csv_path: str, delimiter=','):
+def convert_convert_csv_to_parquet(parquet_path: str, csv_path: str, delimiter=','):
     """Сonvert parquet to csv and save to file
     
     Parameters
@@ -61,31 +60,7 @@ def parquet_to_csv(parquet_path: str, csv_path: str, delimiter=','):
     df.to_csv(csv_path, sep=delimiter, index=False)
 
 
-def csv_to_json(csv_path: str, json_path: str, json_indent=4):
-    """Сonvert csv to json and save to file
-    
-    Parameters
-    ----------
-    csv_path: str
-        The file name of the csv
-    json_path: str
-        The file name of the json
-    json_indent: int, optional
-        Indent for json output file (default is 4)
-    """
-    data = []
-
-    # read csv file
-    with open(csv_path) as csvFile:
-        csvReader = csv.DictReader(csvFile)
-        data = [row for row in csvReader]
-
-    # write json
-    with open(json_path, 'w') as jsonFile:
-        jsonFile.write(json.dumps(data, indent=json_indent))
-
-
-def parquet_schema(parquet_path: str) -> str:
+def get_parquet_schema(parquet_path: str) -> str:
     """Get schema of parquet file
     
     Parameters
@@ -148,7 +123,26 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
         return True
 
 
+# defune functions for printing
+def print_success_message(inputFilename: str, outputFilename: str, time_start:float):
+    """Print final message of successfully converted files with elapsed time
+
+    Parameters
+    ----------
+    inputFilename : str
+        Name of input file
+    outputFilename : str
+        Name of converted output file
+    time_start : float
+        Start of time countdown used for calculating elapsed time
+    """
+    time_elapsed = round((time.perf_counter() - time_start), 4)
+    print(f'Successfully converted from {inputFilename} to {outputFilename} in {time_elapsed} secs')
+
 def main():
+    # save start time for calculating
+    time_start = time.perf_counter()
+    
     # construct the argument parser and parse the arguments
     ap = argparse.ArgumentParser(
         description=__doc__)
@@ -156,16 +150,12 @@ def main():
                     help="Convert csv to parquet. Set input csv filename string (example: data.csv)")
     ap.add_argument("-pc", "--parquet2csv", type=str,
                     help="Convert parquet to csv. Set input parquet filename string (example: data.parquet)")
-    ap.add_argument("-cj", "--csv2json", type=str,
-                    help="Convert csv to json. Set input csv filename string (example: data.csv)")
     ap.add_argument("-s", "--get_schema", type=str,
                     help="Get schema of parquet file. Set input parquet filename string (example: data.parquet)")
     ap.add_argument("-o", "--output", type=str,
                     help="Set output file name without extension (example: newfile)")
     ap.add_argument("-d", "--delimiter", type=str, default=",",
                     help="Set delimiter for csv file (default: ,)")
-    ap.add_argument("-i", "--json_indent", type=int,
-                    help="Set indent for json file (default: None)")
     args = vars(ap.parse_args())
 
     # check convert option
@@ -174,56 +164,47 @@ def main():
         if is_file_ext_correct('csv2parquet', args['csv2parquet'], 'csv'):
             inputFilename = args['csv2parquet']
             
+            # check output filename argument
             if args['output']:
                 outputFilename = args['output'] + '.parquet'
             else:
                 outputFilename = add_filename_suffix(inputFilename, 'converted', 'parquet')
-
+                
+            # check delimeter argument
             if args['delimiter']:
                 csv_to_parquet(inputFilename, outputFilename,
                                delimiter=args['delimiter'])
             else:
                 csv_to_parquet(inputFilename, outputFilename)
 
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
+            print_success_message(inputFilename, outputFilename, time_start)
     elif args['parquet2csv']:
         # convert parquet to csv
         if is_file_ext_correct('parquet2csv', args['parquet2csv'], 'parquet'):
             inputFilename = args['parquet2csv']
             
+            # check output filename argument and convert
             if args['output']:
                 outputFilename = args['output'] + '.csv'
             else:
                 outputFilename = add_filename_suffix(inputFilename, 'converted', 'csv')
 
+            # check delimeter argument and convert
             if args['delimiter']:
-                parquet_to_csv(inputFilename, outputFilename,
+                convert_convert_csv_to_parquet(inputFilename, outputFilename,
                                delimiter=args['delimiter'])
             else:
-                parquet_to_csv(inputFilename, outputFilename)
+                convert_convert_csv_to_parquet(inputFilename, outputFilename)
 
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
-    elif args['csv2json']:
-        # convert csv to json
-        if is_file_ext_correct('csv2json', args['csv2json'], 'csv'):
-            inputFilename = args['csv2json']
-            
-            if args['output']:
-                outputFilename = args['output'] + '.json'
-            else:
-                outputFilename = add_filename_suffix(inputFilename, 'converted', 'json')
-            
-            csv_to_json(inputFilename, outputFilename,
-                        json_indent=args['json_indent'])
-
-            print(f'Successfully converted from {inputFilename} to {outputFilename}')
+            print_success_message(inputFilename, outputFilename, time_start)
     elif args['get_schema']:
         # get schema of parquet
         if is_file_ext_correct('get_schema', args['get_schema'], 'parquet'):
-            print(parquet_schema(args['get_schema']))
+            print(get_parquet_schema(args['get_schema']))
     else:
-        print('Please, pass the necessary arguments for convertion (example: --csv2parquet data.csv).')
-        print('Type --help for description of parameters.')
+        # arguments are None
+        print('Please, pass one of the necessary arguments for convertion:\n--csv2parquet\n--parquet2csv\n--get_schema')
+        print('(example: --csv2parquet data.csv).Type --help for description of parameters.')
 
 
 if __name__ == "__main__":
