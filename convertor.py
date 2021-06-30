@@ -6,7 +6,7 @@ This tool accepts comma separated value files (.csv) as well as apache parquet
 (.parquet) files. It is assumed that the first row of the spreadsheet is the
 location of the columns.
 
-This script requires that `pandas`, `pyarrow, `argparse` and `time` be installed within the Python
+This script requires that `pandas`, `pyarrow`, `argparse` and `time` be installed within the Python
 environment you are running this script in.
 
 This file can also be imported as a module and contains the following

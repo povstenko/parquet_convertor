@@ -1,22 +1,22 @@
 # Data Files Convertor
 
-[![MIT License](https://img.shields.io/badge/GitHub-100000)](https://github.com/povstenko/parquet_convertor)
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+[![GitHub](https://img.shields.io/badge/GitHub-100000)](https://github.com/povstenko/parquet_convertor)
+[![Apache 2.0](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://www.apache.org/licenses/LICENSE-2.0/)
 
 This script allows the user to convert different data types. 
 
 This tool accepts comma-separated value files (.csv) as well as apache parquet (.parquet) files. It is assumed that the first row of the spreadsheet is the location of the columns.
 
-This script requires that `pandas`, `argparse`, `pyarrow`, `csv` and `json` be installed within the Python environment you are running this script in.
+This script requires that `pandas`, `pyarrow`, `argparse` and `time` be installed within the Python environment you are running this script in.
 
 This file can also be imported as a module and contains the following functions:
 
 * `csv_to_parquet` - convert csv to parquet and save to file
 * `parquet_to_csv` - convert parquet to csv and save to file
-* `csv_to_json` - convert csv to json and save to file
 * `parquet_schema` - returns schema of parquet file
 * `add_filename_suffix` - returns filename string with added suffix for filename and change extension
 * `is_file_ext_correct` - returns returns True if filename has correct file extension and prints message otherwise
+* `print_success_message` - prints message of successfull convertion with elapsed time
 * `main` - the main function of the script
 
 ## Table of Contents
@@ -24,7 +24,7 @@ This file can also be imported as a module and contains the following functions:
 - [Usage](#usage)
   * [Convert CSV to Parquet](#convert-csv-to-parquet)
   * [Convert Parquet to CSV](#convert-parquet-to-csv)
-  * [Convert CSV to JSON](#convert-csv-to-json)
+  * [Convert CSV to JSON (Removed option)](#convert-csv-to-json)
   * [Get Parquet schema](#get-parquet-schema)
 - [License](#license)
 
@@ -32,11 +32,9 @@ This file can also be imported as a module and contains the following functions:
 * `-h`, `--help` show help message and exit
 * `-cp`, `--csv2parquet` convert csv to parquet. Set input csv filename string *(example: data.csv)*
 * `-pc`, `--parquet2csv` convert parquet to csv. Set input parquet filename string *(example: data.parquet)*
-* `-cj`, `--csv2json` convert csv to json. Set input csv filename string *(example: data.csv)*
 * `-s`, `--get_schema` get schema of parquet file. Set input parquet filename string *(example: data.parquet)*
 * `-o`, `--output` set output file name without extension *(example: newfile)*
 * `-d`, `--delimiter` set delimiter for csv file *(default: ,)*
-* `-i`, `--json_indent` set indent for json file *(default: None)*
 
 ## Usage
 
@@ -82,6 +80,7 @@ id;first_name;second_name;age
 ```
 
 ### Convert CSV to JSON
+#### This option currently is disabled and moved to `json-convertor` GitHub branch
 The script allows you to convert from CSV to JSON in a similar way:
 ```
 $python convertor.py --csv2json data.csv  
