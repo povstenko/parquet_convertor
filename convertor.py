@@ -40,8 +40,11 @@ def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
     delimiter: str, optional
         Delimiter to use in parsing engine (default is ',')
     """
-    df = pd.read_csv(csv_path, sep=delimiter)
-    df.to_parquet(parquet_path)
+    try:
+        df = pd.read_csv(csv_path, sep=delimiter)
+        df.to_parquet(parquet_path)
+    except Exception as e:
+        print(e)
 
 
 def convert_convert_csv_to_parquet(parquet_path: str, csv_path: str, delimiter=','):
@@ -56,8 +59,11 @@ def convert_convert_csv_to_parquet(parquet_path: str, csv_path: str, delimiter='
     delimiter: str, optional
         Delimiter to use in parsing engine (default is ',')
     """
-    df = pd.read_parquet(parquet_path)
-    df.to_csv(csv_path, sep=delimiter, index=False)
+    try:
+        df = pd.read_parquet(parquet_path)
+        df.to_csv(csv_path, sep=delimiter, index=False)
+    except Exception as e:
+        print(e)
 
 
 def get_parquet_schema(parquet_path: str) -> str:
@@ -73,8 +79,13 @@ def get_parquet_schema(parquet_path: str) -> str:
     str
         a string of parquet schema
     """
-    df = pd.read_parquet(parquet_path)
-    return pyarrow.Table.from_pandas(df=df).schema
+    try:
+        df = pd.read_parquet(parquet_path)
+        schema = pyarrow.Table.from_pandas(df=df).schema
+    except Exception as e:
+        print(e)
+    else:
+        return schema
 
 
 # define functions for working with filenames
@@ -95,7 +106,10 @@ def add_filename_suffix(filename: str, suffix: str, extension: str) -> str:
     str
         filename string with added suffix and new file extension
     """
-    return filename.split('.')[0] + '_' + suffix + '.' + extension
+    try:
+        return filename.split('.')[0] + '_' + suffix + '.' + extension
+    except Exception as e:
+        print(e)
 
 
 def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
@@ -115,12 +129,14 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
     bool
         A flag used to determinate is the given filename has correct extension
     """
-    if filename.split('.')[1] != extension:
-        print(
-            f'Wrong argument for --{parameter}. You must specify *.{extension} file for input')
+    try:
+        assert filename.split('.')[1] == extension
+    except:
+        print(f'Wrong argument for --{parameter}. You must specify *.{extension} file for input')
         return False
     else:
         return True
+    
 
 
 # defune functions for printing
@@ -138,6 +154,7 @@ def print_success_message(inputFilename: str, outputFilename: str, time_start:fl
     """
     time_elapsed = round((time.perf_counter() - time_start), 4)
     print(f'Successfully converted from {inputFilename} to {outputFilename} in {time_elapsed} secs')
+
 
 def main():
     # save start time for calculating
@@ -157,7 +174,7 @@ def main():
     ap.add_argument("-d", "--delimiter", type=str, default=",",
                     help="Set delimiter for csv file (default: ,)")
     args = vars(ap.parse_args())
-
+    
     # check convert option
     if args['csv2parquet']:
         # convert csv to parquet
@@ -203,8 +220,9 @@ def main():
             print(get_parquet_schema(args['get_schema']))
     else:
         # arguments are None
-        print('Please, pass one of the necessary arguments for convertion:\n--csv2parquet\n--parquet2csv\n--get_schema')
-        print('(example: --csv2parquet data.csv).Type --help for description of parameters.')
+        print('Please, pass one of the necessary arguments for convertion:\n--csv2parquet\n--parquet2csv\n--get_schema \
+            \n(example: --csv2parquet data.csv) \
+            \n\nType --help for description of parameters.')
 
 
 if __name__ == "__main__":
