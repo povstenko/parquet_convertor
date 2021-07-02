@@ -139,7 +139,7 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
     
 
 
-# define functions for printing
+# define other functions
 def print_success_message(inputFilename: str, outputFilename: str, time_start:float):
     """Print final message of successfully converted files with elapsed time
 
@@ -155,12 +155,14 @@ def print_success_message(inputFilename: str, outputFilename: str, time_start:fl
     time_elapsed = round((time.perf_counter() - time_start), 4)
     print(f'Successfully converted from {inputFilename} to {outputFilename} in {time_elapsed} secs')
 
+def construct_argument_parser() -> dict:
+    """Construct the argument parser and get the arguments
 
-def main():
-    # save start time for calculating
-    time_start = time.perf_counter()
-    
-    # construct the argument parser and parse the arguments
+    Returns
+    -------
+    dict
+        Dictionary of arguments and paramenters
+    """
     ap = argparse.ArgumentParser(
         description=__doc__)
     ap.add_argument("-cp", "--csv2parquet", type=str,
@@ -173,7 +175,14 @@ def main():
                     help="Set output file name without extension (example: newfile)")
     ap.add_argument("-d", "--delimiter", type=str, default=",",
                     help="Set delimiter for csv file (default: ,)")
-    args = vars(ap.parse_args())
+    
+    return vars(ap.parse_args())
+
+def main():
+    # save start time for calculating
+    time_start = time.perf_counter()
+    
+    args = construct_argument_parser()
     
     # check convert option
     if args['csv2parquet']:
