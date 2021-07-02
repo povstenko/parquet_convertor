@@ -12,8 +12,8 @@ environment you are running this script in.
 This file can also be imported as a module and contains the following
 functions:
 
-    * csv_to_parquet - convert csv to parquet and save to file
-    * convert_convert_csv_to_parquet - convert parquet to csv and save to file
+    * convert_csv_to_parquet - convert csv to parquet and save to file
+    * convert_parquet_to_csv - convert parquet to csv and save to file
     * get_get_parquet_schema - returns schema of parquet file
     * add_filename_suffix - returns filename string with added suffix for filename and change extension
     * is_file_ext_correct - returns returns True if filename has correct file extension and prints message otherwise
@@ -28,8 +28,8 @@ import argparse
 import time
 
 # define functions for convert
-def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
-    """Сonvert csv to parquet and save to file
+def convert_csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
+    """Convert csv to parquet and save to file
     
     Parameters
     ----------
@@ -47,8 +47,8 @@ def csv_to_parquet(csv_path: str, parquet_path: str, delimiter=','):
         print(e)
 
 
-def convert_convert_csv_to_parquet(parquet_path: str, csv_path: str, delimiter=','):
-    """Сonvert parquet to csv and save to file
+def convert_parquet_to_csv(parquet_path: str, csv_path: str, delimiter=','):
+    """Convert parquet to csv and save to file
     
     Parameters
     ----------
@@ -139,7 +139,7 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
     
 
 
-# defune functions for printing
+# define functions for printing
 def print_success_message(inputFilename: str, outputFilename: str, time_start:float):
     """Print final message of successfully converted files with elapsed time
 
@@ -189,10 +189,10 @@ def main():
                 
             # check delimeter argument
             if args['delimiter']:
-                csv_to_parquet(inputFilename, outputFilename,
+                convert_csv_to_parquet(inputFilename, outputFilename,
                                delimiter=args['delimiter'])
             else:
-                csv_to_parquet(inputFilename, outputFilename)
+                convert_csv_to_parquet(inputFilename, outputFilename)
 
             print_success_message(inputFilename, outputFilename, time_start)
     elif args['parquet2csv']:
@@ -208,10 +208,10 @@ def main():
 
             # check delimeter argument and convert
             if args['delimiter']:
-                convert_convert_csv_to_parquet(inputFilename, outputFilename,
+                convert_parquet_to_csv(inputFilename, outputFilename,
                                delimiter=args['delimiter'])
             else:
-                convert_convert_csv_to_parquet(inputFilename, outputFilename)
+                convert_parquet_to_csv(inputFilename, outputFilename)
 
             print_success_message(inputFilename, outputFilename, time_start)
     elif args['get_schema']:
