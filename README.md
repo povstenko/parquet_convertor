@@ -3,11 +3,11 @@
 [![GitHub](https://img.shields.io/badge/GitHub-100000)](https://github.com/povstenko/parquet_convertor)
 [![Apache 2.0](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://www.apache.org/licenses/LICENSE-2.0/)
 
-This script allows the user to convert different data types. 
+This script allows user to convert different data types. 
 
 This tool accepts comma-separated value files (.csv) as well as apache parquet (.parquet) files. It is assumed that the first row of the spreadsheet is the location of the columns.
 
-This script requires that `pandas`, `pyarrow`, `argparse` and `time` be installed within the Python environment you are running this script in.
+This script requires that `pandas`, `pyarrow`, `argparse` and `pathlib` be installed within the Python environment you are running this script in.
 
 This file can also be imported as a module and contains the following functions:
 
@@ -16,7 +16,8 @@ This file can also be imported as a module and contains the following functions:
 * `parquet_schema` - returns schema of parquet file
 * `add_filename_suffix` - returns filename string with added suffix for filename and change extension
 * `is_file_ext_correct` - returns returns True if filename has correct file extension and prints message otherwise
-* `print_success_message` - prints message of successfull convertion with elapsed time
+* `print_success_message` - prints message of successfully conversion with elapsed time
+* `construct_argument_parser` - constructs the argument parser
 * `main` - the main function of the script
 
 ## Table of Contents

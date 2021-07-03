@@ -6,7 +6,7 @@ This tool accepts comma separated value files (.csv) as well as apache parquet
 (.parquet) files. It is assumed that the first row of the spreadsheet is the
 location of the columns.
 
-This script requires that `pandas`, `pyarrow`, `argparse` and `time` be installed within the Python
+This script requires that `pandas`, `pyarrow`, `argparse` and `pathlib` be installed within the Python
 environment you are running this script in.
 
 This file can also be imported as a module and contains the following
@@ -15,9 +15,10 @@ functions:
     * convert_csv_to_parquet - convert csv to parquet and save to file
     * convert_parquet_to_csv - convert parquet to csv and save to file
     * get_get_parquet_schema - returns schema of parquet file
-    * add_filename_suffix - returns filename string with added suffix for filename and change extension
+    * get_filename_with_suffix - returns filename string with added suffix for filename and change extension
     * is_file_ext_correct - returns returns True if filename has correct file extension and prints message otherwise
     * print_success_message - prints message of successfull convertion with elapsed time
+    * construct_argument_parser - constructs the argument parser
     * main - the main function of the script
 """
 
@@ -25,6 +26,7 @@ functions:
 import pandas as pd
 import pyarrow
 import argparse
+import pathlib
 import time
 
 # define functions for convert
@@ -84,12 +86,12 @@ def get_parquet_schema(parquet_path: str) -> str:
         schema = pyarrow.Table.from_pandas(df=df).schema
     except Exception as e:
         print(e)
-    else:
-        return schema
+    
+    return schema
 
 
 # define functions for working with filenames
-def add_filename_suffix(filename: str, suffix: str, extension: str) -> str:
+def get_filename_with_suffix(filename: str, suffix: str, extension: str) -> str:
     """Add suffix for filename and change extension
     
     Parameters
@@ -107,9 +109,12 @@ def add_filename_suffix(filename: str, suffix: str, extension: str) -> str:
         filename string with added suffix and new file extension
     """
     try:
-        return filename.split('.')[0] + '_' + suffix + '.' + extension
+        stem = pathlib.Path(filename).stem
+        filename_with_suffix = stem + '_' + suffix + '.' + extension
     except Exception as e:
         print(e)
+        
+    return filename_with_suffix
 
 
 def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
@@ -122,7 +127,7 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
     filename: str
         The file name string
     extension: str
-        File extension used to compare with filename
+        File extension without dot (.) used to compare with filename
     
     Returns
     -------
@@ -130,7 +135,7 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
         A flag used to determinate is the given filename has correct extension
     """
     try:
-        assert filename.split('.')[1] == extension
+        assert pathlib.Path(filename).suffix == '.' + extension
     except:
         print(f'Wrong argument for --{parameter}. You must specify *.{extension} file for input')
         return False
@@ -140,7 +145,7 @@ def is_file_ext_correct(parameter: str, filename: str, extension: str) -> bool:
 
 
 # define other functions
-def print_success_message(inputFilename: str, outputFilename: str, time_start:float):
+def print_success_message(inputFilename: str, outputFilename: str, time_start: float):
     """Print final message of successfully converted files with elapsed time
 
     Parameters
@@ -194,9 +199,9 @@ def main():
             if args['output']:
                 outputFilename = args['output'] + '.parquet'
             else:
-                outputFilename = add_filename_suffix(inputFilename, 'converted', 'parquet')
+                outputFilename = get_filename_with_suffix(inputFilename, 'converted', 'parquet')
                 
-            # check delimeter argument
+            # check delimeter argument and convert
             if args['delimiter']:
                 convert_csv_to_parquet(inputFilename, outputFilename,
                                delimiter=args['delimiter'])
@@ -209,11 +214,11 @@ def main():
         if is_file_ext_correct('parquet2csv', args['parquet2csv'], 'parquet'):
             inputFilename = args['parquet2csv']
             
-            # check output filename argument and convert
+            # check output filename argument
             if args['output']:
                 outputFilename = args['output'] + '.csv'
             else:
-                outputFilename = add_filename_suffix(inputFilename, 'converted', 'csv')
+                outputFilename = get_filename_with_suffix(inputFilename, 'converted', 'csv')
 
             # check delimeter argument and convert
             if args['delimiter']:
