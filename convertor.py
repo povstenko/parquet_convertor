@@ -157,8 +157,8 @@ def print_success_message(inputFilename: str, outputFilename: str, time_start: f
     time_start : float
         Start of time countdown used for calculating elapsed time
     """
-    time_elapsed = round((time.perf_counter() - time_start), 4)
-    print(f'Successfully converted from {inputFilename} to {outputFilename} in {time_elapsed} secs')
+    time_elapsed = time.perf_counter() - time_start
+    print(f'Successfully converted from {inputFilename} to {outputFilename} in {time_elapsed:.4f} secs')
 
 def construct_argument_parser() -> dict:
     """Construct the argument parser and get the arguments
